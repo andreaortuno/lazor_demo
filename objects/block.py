@@ -2,7 +2,7 @@
 class Block:
     '''
     A generic block for lazor.  We make this extendable so that it can be
-    defined as either:
+    defined as either: Andrea
 
         (a) Reflecting block - Only reflects the laser
         (b) Opaque block - Absorbs the laser
