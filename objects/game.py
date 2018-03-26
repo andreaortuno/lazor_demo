@@ -48,7 +48,60 @@ class Game:
 
             None
         '''
-        pass
+        fp = open(fptr, 'rt')
+        board =[]
+        usable_blocks = {'a': 0, 'b': 0, 'c': 0}
+        start_lazers = []
+        intersect_points = []
+        # gets indexes for board layout
+        for i, line in enumerate(open(fptr, 'rt')):
+            # get board indexes to start matrix
+            if line == "GRID START\n":
+                start_board_line = i + 1
+            elif line == "GRID STOP\n":
+                end_board_line = i
+            #checks for the specific number of blocks to use and make a dictionary
+            elif line[0] == 'A':
+                usable_blocks['a'] = int(line[2])
+            elif line[0] == 'B':
+                usable_blocks['b'] = int(line[2])
+            elif line[0] == 'C':
+                usable_blocks['c'] = int(line[2])
+            # have a list of the start points of lasers
+            elif line[0] == 'L':
+                start_lazers.append(map(int, line[2:-1].split(' ')))
+            # make a list of points that need to be intersected
+            elif line[0] == 'P':
+                intersect_points.append(map(int, line[2:-1].split(' ')))
+
+        # create matrix of the empty board
+        for sentence in fp.read().splitlines()[start_board_line:end_board_line]:
+            grid_line = []
+            for char in sentence:
+                if char == 'x':
+                    grid_line.append('x')
+                elif char == 'o':
+                    grid_line.append('o')
+                elif char == 'A':
+                    grid_line.append('A')
+                elif char == 'B':
+                    grid_line.append('B')
+                elif char == 'C':
+                    grid_line.append('C')
+            board.append(grid_line)
+
+        #TO DO MAYBE assign all below vaiables to self.whatever
+        print board
+        print usable_blocks
+        print start_lazers
+        print intersect_points
+        # Length of board for half steps: x, y = 2 * len(board), 2 * len(board[0])
+        # file errors to display
+        # No GRID START or END
+        # No Usable blocks defined
+        # No start of lazer defined
+        # No intersect points defined
+
 
     def generate_boards(self):
         '''
@@ -87,6 +140,7 @@ class Game:
         partitions = [
             p for p in get_partitions(len(self.blocks), self.available_space) if max(p) == 1
         ]
+
 
         # Now we have the partitions, we just need to make our boards
         boards = []
@@ -166,3 +220,4 @@ class Game:
             # MAYBE MORE CODE HERE?
 
             # CHECKS HERE
+test = Game("test.input")
