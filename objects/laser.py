@@ -6,11 +6,11 @@ class Laser:
     '''
     def __init__(self):
         '''
-        Difficulty 1
+        Difficulty 1 KK
 
         DONT FORGET TO COMMENT!
         '''
         pass
 
     # MORE
-    # Difficulty 4
+    # Difficulty 4 Everyone
