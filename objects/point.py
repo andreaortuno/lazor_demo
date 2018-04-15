@@ -1,16 +1,21 @@
-
 class Point:
     '''
     The Point.  This object desribes the points for which we want the laser
-    light to intersect. Apeksha
+    light to intersect.
     '''
     def __init__(self, pos):
         '''
-        Difficulty 1
+        Initialize a point object.
 
-        DONT FORGET TO COMMENT!
+        **Parameters**
+
+            pos: *list*
+                The postion of the point on the board
+
+        **Returns**
+
+            point: *Point*
+                This point object
         '''
-        pass
-
-    # MORE
-    # Difficulty 1
+        self.postiion = pos
+        self.intersected = False
