@@ -114,8 +114,6 @@ class Game:
         
     def generate_boards(self):
         '''
-        Difficulty 3 Apeksha
-
         A function to generate all possible board combinations with the
         available blocks.
 
@@ -129,33 +127,52 @@ class Game:
 
         **Returns**
 
-            None
+            List of all possible permutations
         '''
-
         def get_partitions(n, k):
             '''
             A robust way of getting all permutations.  Note, this is clearly not the fastest
             way about doing this though. Andrea
-
             **Reference**
-
              - http://stackoverflow.com/a/34690583
             '''
             for c in itertools.combinations(range(n + k - 1), k - 1):
                 yield [b - a - 1 for a, b in zip((-1,) + c, c + (n + k - 1,))]
 
+        series = ''
+        open_spaces = 0
+
+        #checks how many open spaces are on the board
+        for i in self.start_board:
+            for j in i:
+                if j == 'o':
+                    open_spaces += 1
+
+        # makes a list of all usable blocks
+        for key in self.usable_blocks:
+            series += self.usable_blocks[key]*key
+
         # Get the different possible block positions.  Note, due to the function we're using, we
         # skip any instance of multiple "stars in bins".
-        partitions = [
-            p for p in get_partitions(len(self.blocks), self.available_space) if max(p) == 1
-        ]
+        partitions = [p for p in get_partitions(len(series), open_spaces) if max(p) == 1]
 
+        # gets the permutation of all the blocks to be put in partitions
+        blocks_permutations = {"".join(p) for p in itertools.permutations(series)}
+        board_permutations = []
 
-        # Now we have the partitions, we just need to make our boards
-        boards = []
+        # creates permutations of the board by putting the permutations of the blocks in the corresponding bins
+        for partition in partitions:
+            for permut in blocks_permutations:
+                board_string = ""
+                blocks = list(permut)
+                for char in partition:
+                    if char == 0:
+                        board_string +='o'
+                    if char == 1:
+                        board_string += blocks.pop(0)
+                board_permutations.append(board_string)
 
-        # YOUR CODE HERE
-        pass
+        return board_permutations
 
     def set_board(self, board):
         '''
