@@ -223,8 +223,6 @@ class Game:
     
     def save_board(self):
         '''
-        Difficulty 2 Apeksha, KK
-
         A function to save potential boards to file.  This is to be used when
         the solution is found, but can also be used for debugging.
 
@@ -232,8 +230,20 @@ class Game:
 
             None
         '''
-        # YOUR CODE HERE
-        pass
+        #checks if a solution.txt files exists, if so it deletes it
+        try:
+            os.remove("solution.txt")
+        except OSError:
+            pass
+        # creates a solution.txt file that has the solution board in in
+        f = open("solution.txt","w+")
+        f.write('~~~ SOLUTION BOARD ~~~\nfor "%s"\n\n' % self.fname)
+        f.write("GRID START\n")
+        for list in self.solution_board:
+            line = " ".join(map(str, list))
+            f.write(line + '\n')
+        f.write("GRID END\n")
+        f.close()
     
     def run(self):
         '''
