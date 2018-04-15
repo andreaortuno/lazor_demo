@@ -341,3 +341,59 @@ class Game:
                 break
 
         print "end\n"
+        
+# # code to run all boards in order (we used this to check if the code was working)
+#
+# print 'braid_5'
+# test = Game("../boards/braid_5.input")
+# print test
+# test.run()
+# print test
+#
+# print 'diagonal_8'
+# test = Game("../boards/diagonal_8.input")
+# print test
+# test.run()
+# print test
+#
+# print 'diagonal_9'
+# test = Game("../boards/diagonal_9.input")
+# print test
+# test.run()
+# print test
+#
+# print 'mad_1'
+# test = Game("../boards/mad_1.input")
+# print test
+# test.run()
+# print test
+#
+# print 'mad_7'
+# test = Game("../boards/mad_7.input")
+# print test
+# test.run()
+# print test
+#
+# print 'showstopper_2'
+# test = Game("../boards/showstopper_2.input")
+# print test
+# test.run()
+# print test
+#
+# print 'tricky_1'
+# test = Game("../boards/tricky_1.input")
+# print test
+# test.run()
+# print test
+#
+# print 'vertices_1'
+# test = Game("../boards/vertices_1.input")
+# print test
+# test.run()
+# print test
+#
+# print 'vertices_2'
+# test = Game("../boards/vertices_2.input")
+# print test
+# test.run()
+# print test
