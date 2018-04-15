@@ -1,7 +1,10 @@
 import sys
-import copy
 import itertools
-# import the Point, Block, and Laser objects
+import os
+from copy import deepcopy
+from block import Block
+from point import Point
+from laser import Laser
 
 
 class Game:
@@ -35,8 +38,6 @@ class Game:
 
     def read(self, fptr):
         '''
-        Difficulty 3 Andrea
-
         Some function that reads in a file, and generates the internal board.
 
         **Parameters**
@@ -48,65 +49,71 @@ class Game:
 
             None
         '''
+        def check_missing():
+            '''
+            Function that checks all variables for the game are not empty
+            '''
+            block_quantity = 0
+            for key in self.usable_blocks:
+                block_quantity += self.usable_blocks[key]
+
+            if block_quantity == 0:
+                raise Exception("There are no blocks on your file!")
+            elif not self.start_lazers:
+                raise Exception("There are no lasers on your file!")
+            elif not self.intersect_points:
+                raise Exception("There are no points to intersect on your file!")
+
         fp = open(fptr, 'rt')
-        board =[]
-        usable_blocks = {'a': 0, 'b': 0, 'c': 0}
-        start_lazers = []
-        intersect_points = []
-        # gets indexes for board layout
-        for i, line in enumerate(open(fptr, 'rt')):
+        self.start_board =[] #board that indicataes available spaces and fixed blocks
+        self.usable_blocks = {'A': 0, 'B': 0, 'C': 0} #list of the blocks to be put in the board
+        self.start_lazers = [] #list of the lazers
+        self.intersect_points = [] #list of the points to be intersected
+        # gets indexes for self.board layout
+        for i, line in enumerate(open(fptr, 'rt')): # goes through file by line to get the info
             # get board indexes to start matrix
             if line == "GRID START\n":
                 start_board_line = i + 1
             elif line == "GRID STOP\n":
                 end_board_line = i
             #checks for the specific number of blocks to use and make a dictionary
-            elif line[0] == 'A':
-                usable_blocks['a'] = int(line[2])
-            elif line[0] == 'B':
-                usable_blocks['b'] = int(line[2])
-            elif line[0] == 'C':
-                usable_blocks['c'] = int(line[2])
+            elif line[0] in ['A', 'B', 'C'] and line[2] not in ['A', 'B', 'C', 'a', 'b', 'c', 'x', 'o', ' ']:
+                try:
+                    self.usable_blocks[line[0]] = int(line[2])
+                except:
+                    raise Exception("Whoops! Something is wrong with the way you specified blocks on your file.")
             # have a list of the start points of lasers
             elif line[0] == 'L':
-                start_lazers.append(map(int, line[2:-1].split(' ')))
+                try:
+                    self.start_lazers.append(map(int, line[2:].split(' ')))
+                except:
+                    raise Exception("Whoops! Something is wrong with the way you specified lasers on your file.")
             # make a list of points that need to be intersected
             elif line[0] == 'P':
-                intersect_points.append(map(int, line[2:-1].split(' ')))
+                try:
+                    self.intersect_points.append(map(int, line[2:].split(' ')))
+                except:
+                    raise Exception("Whoops! Something is wrong with the way you specified points on your file.")
 
-        # create matrix of the empty board
-        for sentence in fp.read().splitlines()[start_board_line:end_board_line]:
-            grid_line = []
-            for char in sentence:
-                if char == 'x':
-                    grid_line.append('x')
-                elif char == 'o':
-                    grid_line.append('o')
-                elif char == 'A':
-                    grid_line.append('A')
-                elif char == 'B':
-                    grid_line.append('B')
-                elif char == 'C':
-                    grid_line.append('C')
-            board.append(grid_line)
+        # create matrix of the empty start board
+        start_board = []
+        try:
+            for sentence in fp.read().splitlines()[start_board_line:end_board_line]:
+                grid_line = []
+                for char in sentence:
+                    if char in ['x', 'o', 'A', 'B', 'C']:
+                        grid_line.append(char)
+                start_board.append(grid_line)
+            self.start_board = filter(None, start_board)
+        except:
+            raise Exception("Whoops! Something is wrong the game grid on your file.")
 
-        #TO DO MAYBE assign all below vaiables to self.whatever
-        print board
-        print usable_blocks
-        print start_lazers
-        print intersect_points
-        # Length of board for half steps: x, y = 2 * len(board), 2 * len(board[0])
-        # file errors to display
-        # No GRID START or END
-        # No Usable blocks defined
-        # No start of lazer defined
-        # No intersect points defined
+        check_missing()
 
-
+        fp.close()
+        
     def generate_boards(self):
         '''
-        Difficulty 3 Apeksha
-
         A function to generate all possible board combinations with the
         available blocks.
 
@@ -120,38 +127,55 @@ class Game:
 
         **Returns**
 
-            None
+            List of all possible permutations
         '''
-
         def get_partitions(n, k):
             '''
             A robust way of getting all permutations.  Note, this is clearly not the fastest
             way about doing this though. Andrea
-
             **Reference**
-
              - http://stackoverflow.com/a/34690583
             '''
             for c in itertools.combinations(range(n + k - 1), k - 1):
                 yield [b - a - 1 for a, b in zip((-1,) + c, c + (n + k - 1,))]
 
+        series = ''
+        open_spaces = 0
+
+        #checks how many open spaces are on the board
+        for i in self.start_board:
+            for j in i:
+                if j == 'o':
+                    open_spaces += 1
+
+        # makes a list of all usable blocks
+        for key in self.usable_blocks:
+            series += self.usable_blocks[key]*key
+
         # Get the different possible block positions.  Note, due to the function we're using, we
         # skip any instance of multiple "stars in bins".
-        partitions = [
-            p for p in get_partitions(len(self.blocks), self.available_space) if max(p) == 1
-        ]
+        partitions = [p for p in get_partitions(len(series), open_spaces) if max(p) == 1]
 
+        # gets the permutation of all the blocks to be put in partitions
+        blocks_permutations = {"".join(p) for p in itertools.permutations(series)}
+        board_permutations = []
 
-        # Now we have the partitions, we just need to make our boards
-        boards = []
+        # creates permutations of the board by putting the permutations of the blocks in the corresponding bins
+        for partition in partitions:
+            for permut in blocks_permutations:
+                board_string = ""
+                blocks = list(permut)
+                for char in partition:
+                    if char == 0:
+                        board_string +='o'
+                    if char == 1:
+                        board_string += blocks.pop(0)
+                board_permutations.append(board_string)
 
-        # YOUR CODE HERE
-        pass
+        return board_permutations
 
     def set_board(self, board):
         '''
-        Difficulty 2 Andrea
-
         A function to assign a potential board so that it can be checked.
 
         **Parameters**
@@ -163,11 +187,39 @@ class Game:
 
         **Returns**
 
-            None
+            Play_Board
         '''
-        # YOUR CODE HERE
-        pass
+        #takes a board from the permutations of boards
+        board_string = board[:]
+        play_board_blocks = deepcopy(self.start_board)
 
+        # assigns the characters of the board string to a play board
+        for list in play_board_blocks:
+            for indx, char in enumerate(list):
+                if char == 'o':
+                    list[indx] = board_string[0]
+                    board_string = board_string[1:]
+
+        self.solution_board = play_board_blocks
+
+        # creates list of Nones to put the board in and inlcude the points
+        play_board =[[None for i in range(((len(play_board_blocks[0]) * 2) + 1))]
+                     for j in range(((len(play_board_blocks) * 2) + 1))]
+
+        # puts blocks on the play_board's odd spaces
+        blocks_pos = [0, 0]
+        for i in range(1,len(play_board) - 1, 2):
+            for j in range(1,len(play_board[i]) - 1, 2):
+                play_board[i][j] = Block(play_board_blocks[blocks_pos[0]][blocks_pos[1]])
+                blocks_pos[1] += 1
+            blocks_pos[0] += 1
+            blocks_pos[1] = 0
+
+        # puts points on play_board
+        for point in self.intersect_points:
+            play_board[point[1]][point[0]] = Point(point)
+
+        return play_board
     def save_board(self):
         '''
         Difficulty 2 Apeksha, KK
