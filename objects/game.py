@@ -1,7 +1,10 @@
 import sys
-import copy
 import itertools
-# import the Point, Block, and Laser objects
+import os
+from copy import deepcopy
+from block import Block
+from point import Point
+from laser import Laser
 
 
 class Game:
