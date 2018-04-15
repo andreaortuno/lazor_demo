@@ -176,8 +176,6 @@ class Game:
 
     def set_board(self, board):
         '''
-        Difficulty 2 Andrea
-
         A function to assign a potential board so that it can be checked.
 
         **Parameters**
@@ -189,11 +187,39 @@ class Game:
 
         **Returns**
 
-            None
+            Play_Board
         '''
-        # YOUR CODE HERE
-        pass
+        #takes a board from the permutations of boards
+        board_string = board[:]
+        play_board_blocks = deepcopy(self.start_board)
 
+        # assigns the characters of the board string to a play board
+        for list in play_board_blocks:
+            for indx, char in enumerate(list):
+                if char == 'o':
+                    list[indx] = board_string[0]
+                    board_string = board_string[1:]
+
+        self.solution_board = play_board_blocks
+
+        # creates list of Nones to put the board in and inlcude the points
+        play_board =[[None for i in range(((len(play_board_blocks[0]) * 2) + 1))]
+                     for j in range(((len(play_board_blocks) * 2) + 1))]
+
+        # puts blocks on the play_board's odd spaces
+        blocks_pos = [0, 0]
+        for i in range(1,len(play_board) - 1, 2):
+            for j in range(1,len(play_board[i]) - 1, 2):
+                play_board[i][j] = Block(play_board_blocks[blocks_pos[0]][blocks_pos[1]])
+                blocks_pos[1] += 1
+            blocks_pos[0] += 1
+            blocks_pos[1] = 0
+
+        # puts points on play_board
+        for point in self.intersect_points:
+            play_board[point[1]][point[0]] = Point(point)
+
+        return play_board
     def save_board(self):
         '''
         Difficulty 2 Apeksha, KK
