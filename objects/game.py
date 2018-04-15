@@ -9,16 +9,13 @@ from laser import Laser
 
 class Game:
     '''
-    The game grid.  Here we read in some user input, assign all our blocks,
+    The game grid. Here we read in some user input, assign all our blocks,
     lasers, and points, determine all the possible different combinations
     of boards we could make, and then run through them all to try and find
     the winning one.
     '''
-
     def __init__(self, fptr):
         '''
-        Difficulty 1 Andrea
-
         Initialize our game.
 
         **Parameters**
@@ -32,7 +29,7 @@ class Game:
                 This game object.
         '''
         self.fname = fptr
-        
+
         self.read(fptr)
 
     def __repr__(self):
