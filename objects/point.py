@@ -2,7 +2,7 @@
 class Point:
     '''
     The Point.  This object desribes the points for which we want the laser
-    light to intersect.
+    light to intersect. Apeksha
     '''
     def __init__(self, pos):
         '''

@@ -14,7 +14,7 @@ class Game:
 
     def __init__(self, fptr):
         '''
-        Difficulty 1
+        Difficulty 1 Andrea
 
         Initialize our game.
 
@@ -35,7 +35,7 @@ class Game:
 
     def read(self, fptr):
         '''
-        Difficulty 3
+        Difficulty 3 Andrea
 
         Some function that reads in a file, and generates the internal board.
 
@@ -105,7 +105,7 @@ class Game:
 
     def generate_boards(self):
         '''
-        Difficulty 3
+        Difficulty 3 Apeksha
 
         A function to generate all possible board combinations with the
         available blocks.
@@ -126,7 +126,7 @@ class Game:
         def get_partitions(n, k):
             '''
             A robust way of getting all permutations.  Note, this is clearly not the fastest
-            way about doing this though.
+            way about doing this though. Andrea
 
             **Reference**
 
@@ -150,7 +150,7 @@ class Game:
 
     def set_board(self, board):
         '''
-        Difficulty 2
+        Difficulty 2 Andrea
 
         A function to assign a potential board so that it can be checked.
 
@@ -170,7 +170,7 @@ class Game:
 
     def save_board(self):
         '''
-        Difficulty 2
+        Difficulty 2 Apeksha, KK
 
         A function to save potential boards to file.  This is to be used when
         the solution is found, but can also be used for debugging.
@@ -184,7 +184,7 @@ class Game:
 
     def run(self):
         '''
-        Difficulty 3
+        Difficulty 3 KK
 
         The main code is here.  We call the generate_boards function, then we
         loop through, using set_board to assign a board, "play" the game,
