@@ -32,9 +32,27 @@ class Game:
                 This game object.
         '''
         self.fname = fptr
+        
         self.read(fptr)
 
-    # DO SOMETHING HERE SO WE CAN PRINT A REPRESENTATION OF GAME!
+    def __repr__(self):
+        '''
+        printable representation of object Game. When only initialized, it
+        returns the Starting board. Once a solution has been found it returns
+        the Solution board.
+        '''
+        string_to_print = ''
+        try:
+            string_to_print = "SOLUTION BOARD for %s\n\n" %self.fname
+            for list in self.solution_board:
+                line = " ".join(map(str, list))
+                string_to_print += (line + '\n')
+        except:
+            string_to_print = "START BOARD for %s\n\n" %self.fname
+            for list in self.start_board:
+                line = " ".join(map(str, list))
+                string_to_print += (line + '\n')
+        return string_to_print
 
     def read(self, fptr):
         '''
