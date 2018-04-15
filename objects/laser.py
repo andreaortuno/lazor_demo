@@ -1,16 +1,27 @@
-
+from point import Point
 class Laser:
     '''
     The Laser.  We need to store both the starting position and direction of
     the laser.
     '''
-    def __init__(self):
+    def __init__(self, laser):
         '''
-        Difficulty 1 KK
+        Initialize a laser object.
 
-        DONT FORGET TO COMMENT!
+        **Parameters**
+
+            laser: *list*
+                list of starting position and direction
+
+        **Returns**
+
+            laser: *Laser*
+                This laser object
         '''
-        pass
+
+        self.starting_pos = laser[:2]
+        self.direction = laser[2:]
+        self.children = []
 
     # MORE
     # Difficulty 4 Everyone
